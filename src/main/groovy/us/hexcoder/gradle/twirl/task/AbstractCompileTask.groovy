@@ -1,19 +1,20 @@
 package us.hexcoder.gradle.twirl.task
 
+import java.nio.charset.Charset
+import scala.io.Codec
+
 import org.gradle.api.DefaultTask
 import play.twirl.api.HtmlFormat
 import play.twirl.api.JavaScriptFormat
 import play.twirl.api.TxtFormat
 import play.twirl.api.XmlFormat
 import play.twirl.compiler.TwirlCompiler
-import scala.io.Codec
 
-import java.nio.charset.Charset
 /**
  * @author 67726e
  */
 abstract class AbstractCompileTask extends DefaultTask {
-	protected static final Map<String, String> FORMATTERS;
+	protected static final Map<String, String> FORMATTERS
 
 	static {
 		FORMATTERS = new HashMap<>()
@@ -39,12 +40,12 @@ abstract class AbstractCompileTask extends DefaultTask {
 		}
 	}
 
-	private static def findTemplates(File sourceDirectory) {
-        	return new FileNameFinder().getFileNames(sourceDirectory.absolutePath, '**/*.scala.*')
+	private static List<String> findTemplates(File sourceDirectory) {
+		return new FileNameFinder().getFileNames(sourceDirectory.absolutePath, '**/*.scala.*')
 	}
 
 	private static String extensionOf(File file) {
-		String[] parts = file.getName().split("\\.", -1);
-		return parts[parts.length - 1];
+		String[] parts = file.getName().split("\\.", -1)
+		return parts[parts.length - 1]
 	}
 }
