@@ -19,7 +19,6 @@ class TwirlExtension {
 		imports.addAll(
 				"java.lang._",
 				"java.util._",
-				"scala.collection.JavaConversions._",
 				"scala.collection.JavaConverters._")
 	}
 }
