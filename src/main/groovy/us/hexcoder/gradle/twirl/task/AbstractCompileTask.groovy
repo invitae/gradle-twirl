@@ -1,5 +1,10 @@
 package us.hexcoder.gradle.twirl.task
 
+
+import scala.collection.immutable.Vector$
+import scala.collection.immutable.Vector
+import scala.collection.mutable.Builder
+
 import java.nio.charset.Charset
 import scala.io.Codec
 
@@ -27,7 +32,10 @@ abstract class AbstractCompileTask extends DefaultTask {
 	def compile(String sourceDirectory, String targetDirectory) {
 		File source = new File(getProject().projectDir, sourceDirectory)
 		File target = new File(getProject().projectDir, targetDirectory)
-		String imports = project.twirl.imports.join("\r\n").replaceAll("(.+)", "import \$1")
+		Builder<String, Vector<String>> impBuilder = new Vector$().newBuilder()
+		for (String imp:  project.twirl.imports){
+			impBuilder.$plus$eq(imp)
+		}
 		Codec codec = new Codec(Charset.forName((String)project.twirl.charset))
 
 		final List<String> templates = findTemplates(source)
@@ -36,7 +44,7 @@ abstract class AbstractCompileTask extends DefaultTask {
 			final File templateFile = new File(templatePath)
 			final String formatter = FORMATTERS.get(extensionOf(templateFile))
 			logger.debug("Compiling Twirl template: " + templatePath)
-			TwirlCompiler.compile(templateFile, source, target, formatter, imports, codec, false, false)
+			TwirlCompiler.compile(templateFile, source, target, formatter, impBuilder.result(), new Vector$().empty(), codec, false)
 		}
 	}
 
